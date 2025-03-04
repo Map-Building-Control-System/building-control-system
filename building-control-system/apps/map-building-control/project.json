@@ -1,0 +1,9 @@
+{
+  "name": "map-building-control",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/map-building-control",
+  "projectType": "application",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project map-building-control --web",
+  "targets": {}
+}

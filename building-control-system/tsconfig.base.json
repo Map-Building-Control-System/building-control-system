@@ -1,0 +1,35 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@building-control-system/auth": ["libs/auth/src/index.ts"],
+      "@building-control-system/auth/server": ["libs/auth/src/server.ts"],
+      "@building-control-system/buttoncomponent": [
+        "libs/buttoncomponent/src/index.ts"
+      ],
+      "@building-control-system/buttoncomponent/server": [
+        "libs/buttoncomponent/src/server.ts"
+      ],
+      "@building-control-system/testcomponent": [
+        "libs/auth/testcomponent/src/index.ts"
+      ],
+      "@building-control-system/testcomponent/server": [
+        "libs/auth/testcomponent/src/server.ts"
+      ]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

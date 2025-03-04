@@ -1,0 +1,10 @@
+{
+  "name": "map-building-control-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/map-building-control-e2e/src",
+  "tags": [],
+  "implicitDependencies": ["map-building-control"],
+  "// targets": "to see all targets run: nx show project map-building-control-e2e --web",
+  "targets": {}
+}
