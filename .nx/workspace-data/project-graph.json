@@ -1,0 +1,63 @@
+{
+  "nodes": {
+    "map-building-control-e2e": {
+      "name": "map-building-control-e2e",
+      "type": "e2e",
+      "data": {
+        "root": "building-control-system/apps/map-building-control-e2e",
+        "name": "map-building-control-e2e",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/map-building-control-e2e/src",
+        "tags": [],
+        "implicitDependencies": [
+          "map-building-control"
+        ],
+        "targets": {}
+      }
+    },
+    "map-building-control": {
+      "name": "map-building-control",
+      "type": "app",
+      "data": {
+        "root": "building-control-system/apps/map-building-control",
+        "name": "map-building-control",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "sourceRoot": "apps/map-building-control",
+        "projectType": "application",
+        "tags": [],
+        "targets": {},
+        "implicitDependencies": []
+      }
+    },
+    "auth": {
+      "name": "auth",
+      "type": "lib",
+      "data": {
+        "root": "building-control-system/libs/auth",
+        "name": "auth",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "sourceRoot": "libs/auth/src",
+        "projectType": "library",
+        "tags": [],
+        "targets": {},
+        "implicitDependencies": []
+      }
+    }
+  },
+  "externalNodes": {},
+  "dependencies": {
+    "map-building-control-e2e": [
+      {
+        "source": "map-building-control-e2e",
+        "target": "map-building-control",
+        "type": "implicit"
+      }
+    ],
+    "map-building-control": [],
+    "auth": []
+  },
+  "version": "6.0",
+  "errors": [],
+  "computedAt": 1741297241162
+}

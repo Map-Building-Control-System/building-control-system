@@ -1,0 +1,112 @@
+{
+  "building-control-system/apps/map-building-control": {
+    "root": [
+      "building-control-system/apps/map-building-control/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "building-control-system/apps/map-building-control/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "building-control-system/apps/map-building-control/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "building-control-system/apps/map-building-control/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "building-control-system/apps/map-building-control/project.json",
+      "nx/core/project-json"
+    ],
+    "// targets": [
+      "building-control-system/apps/map-building-control/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "building-control-system/apps/map-building-control/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "building-control-system/apps/map-building-control/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "building-control-system/apps/map-building-control-e2e": {
+    "root": [
+      "building-control-system/apps/map-building-control-e2e/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "building-control-system/apps/map-building-control-e2e/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "building-control-system/apps/map-building-control-e2e/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "building-control-system/apps/map-building-control-e2e/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "building-control-system/apps/map-building-control-e2e/project.json",
+      "nx/core/project-json"
+    ],
+    "// targets": [
+      "building-control-system/apps/map-building-control-e2e/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "building-control-system/apps/map-building-control-e2e/project.json",
+      "nx/core/project-json"
+    ],
+    "implicitDependencies": [
+      "building-control-system/apps/map-building-control-e2e/project.json",
+      "nx/core/project-json"
+    ],
+    "implicitDependencies.map-building-control": [
+      "building-control-system/apps/map-building-control-e2e/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "building-control-system/apps/map-building-control-e2e/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "building-control-system/libs/auth": {
+    "root": [
+      "building-control-system/libs/auth/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "building-control-system/libs/auth/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "building-control-system/libs/auth/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "building-control-system/libs/auth/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "building-control-system/libs/auth/project.json",
+      "nx/core/project-json"
+    ],
+    "// targets": [
+      "building-control-system/libs/auth/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "building-control-system/libs/auth/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "building-control-system/libs/auth/project.json",
+      "nx/core/project-json"
+    ]
+  }
+}

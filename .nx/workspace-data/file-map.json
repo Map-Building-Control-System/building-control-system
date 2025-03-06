@@ -1,0 +1,254 @@
+{
+  "version": "6.0",
+  "nxVersion": "20.4.6",
+  "pathMappings": {},
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "projectFileMap": {
+      "map-building-control-e2e": [
+        {
+          "file": "building-control-system/apps/map-building-control-e2e/eslint.config.mjs",
+          "hash": "1172734138943286526"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control-e2e/playwright.config.ts",
+          "hash": "11192844955090292240"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control-e2e/project.json",
+          "hash": "2330244096018749699"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control-e2e/src/example.spec.ts",
+          "hash": "16019101014373124625"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control-e2e/tsconfig.json",
+          "hash": "18107275616570252607"
+        }
+      ],
+      "map-building-control": [
+        {
+          "file": "building-control-system/apps/map-building-control/eslint.config.mjs",
+          "hash": "10818484782922660641"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/index.d.ts",
+          "hash": "5498222895072842432"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/jest.config.ts",
+          "hash": "5188681562812655460"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/next-env.d.ts",
+          "hash": "13479566806441373148"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/next.config.js",
+          "hash": "15044503989835327849"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/project.json",
+          "hash": "17530872485519685918"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/public/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/public/favicon.ico",
+          "hash": "9303420814833116677"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/specs/index.spec.tsx",
+          "hash": "2873936096691223229"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/app/global.css",
+          "hash": "12142430952933299026"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/app/layout.module.scss",
+          "hash": "11327591074590669700"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/app/layout.tsx",
+          "hash": "10393929372380626663"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/app/page.module.scss",
+          "hash": "5708835840392938794"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/app/page.tsx",
+          "hash": "16494847541945508256"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/app/variables.scss",
+          "hash": "12072207431739348520"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/components/Dashboard/DashboardCard.module.scss",
+          "hash": "2676747838169544005"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/components/Dashboard/DashboardCard.tsx",
+          "hash": "4632833103036062759"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/components/Layout/Layout.module.scss",
+          "hash": "16633626654065646331"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/components/Layout/Layout.tsx",
+          "hash": "4567887360696236363"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/components/Navbar/Navbar.module.scss",
+          "hash": "4617838182801263034"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/components/Navbar/Navbar.tsx",
+          "hash": "6743158360247407623"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/components/Sidebar/Sidebar.module.scss",
+          "hash": "16870590058882177846"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/components/Sidebar/Sidebar.tsx",
+          "hash": "14350978928142132893"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/pages/_app.tsx",
+          "hash": "1925426852886918872"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/pages/about.tsx",
+          "hash": "4009625687695433341"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/pages/maps.tsx",
+          "hash": "17694006554015374416"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/styles/global.scss",
+          "hash": "14515931440737670290"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/src/types/index.ts",
+          "hash": "17801424790824233940"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/tsconfig.json",
+          "hash": "8901088585959401810"
+        },
+        {
+          "file": "building-control-system/apps/map-building-control/tsconfig.spec.json",
+          "hash": "13752930008724566565"
+        }
+      ],
+      "auth": [
+        {
+          "file": "building-control-system/libs/auth/.babelrc",
+          "hash": "15003411175763814189"
+        },
+        {
+          "file": "building-control-system/libs/auth/README.md",
+          "hash": "15781478052595520525"
+        },
+        {
+          "file": "building-control-system/libs/auth/project.json",
+          "hash": "4020757868934545464"
+        },
+        {
+          "file": "building-control-system/libs/auth/src/index.ts",
+          "hash": "15955201767330432184"
+        },
+        {
+          "file": "building-control-system/libs/auth/src/lib/auth.module.css",
+          "hash": "9824504850739023139"
+        },
+        {
+          "file": "building-control-system/libs/auth/src/lib/auth.tsx",
+          "hash": "18347049578901653887"
+        },
+        {
+          "file": "building-control-system/libs/auth/src/lib/hello-server.tsx",
+          "hash": "4430793549903582581"
+        },
+        {
+          "file": "building-control-system/libs/auth/src/server.ts",
+          "hash": "358709210498179477"
+        },
+        {
+          "file": "building-control-system/libs/auth/tsconfig.json",
+          "hash": "13979398437825372391"
+        },
+        {
+          "file": "building-control-system/libs/auth/tsconfig.lib.json",
+          "hash": "1903080221552158959"
+        }
+      ]
+    },
+    "nonProjectFiles": [
+      {
+        "file": ".vscode/settings.json",
+        "hash": "7559114847875866593"
+      },
+      {
+        "file": "building-control-system/.editorconfig",
+        "hash": "5443105041930014821"
+      },
+      {
+        "file": "building-control-system/.gitignore",
+        "hash": "7360478915843480458"
+      },
+      {
+        "file": "building-control-system/.prettierignore",
+        "hash": "14688272390704683536"
+      },
+      {
+        "file": "building-control-system/.prettierrc",
+        "hash": "16267754514737964994"
+      },
+      {
+        "file": "building-control-system/.vscode/extensions.json",
+        "hash": "11309362834336059819"
+      },
+      {
+        "file": "building-control-system/README.md",
+        "hash": "458205490027241984"
+      },
+      {
+        "file": "building-control-system/eslint.config.mjs",
+        "hash": "3462096019013144053"
+      },
+      {
+        "file": "building-control-system/jest.config.ts",
+        "hash": "3494843969422251966"
+      },
+      {
+        "file": "building-control-system/jest.preset.js",
+        "hash": "9430166341120122740"
+      },
+      {
+        "file": "building-control-system/nx.json",
+        "hash": "11278456635300432406"
+      },
+      {
+        "file": "building-control-system/package-lock.json",
+        "hash": "15977132362686879860"
+      },
+      {
+        "file": "building-control-system/package.json",
+        "hash": "1394613564050501752"
+      },
+      {
+        "file": "building-control-system/tsconfig.base.json",
+        "hash": "15666593418192587174"
+      }
+    ]
+  }
+}

@@ -28,11 +28,7 @@
       "jest",
       "node"
     ],
-    // Yeni eklenen ayarlar
-    "baseUrl": ".", // Kök dizini belirtir
-    "paths": {
-      "@/*": ["./*"] // @/ ile başlayan importlar için yol tanımlar
-    }
+
   },
   "include": [
     "**/*.js",
