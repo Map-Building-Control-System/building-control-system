@@ -1,12 +1,18 @@
-import React from 'react'
-import {Auth} from '@building-control-system/auth';
-const maps = () => {
+// pages/index.tsx
+import React from 'react';
+import dynamic from 'next/dynamic';
+
+const MapComponent = dynamic(
+  () => import('@building-control-system/Map').then((mod) => mod.MapComponent),
+  { ssr: false }
+);
+
+const Maps = ()=> {
   return (
     <div>
-      <Auth/>
-      deneme
+      <h1>Harita Test</h1>
+      <MapComponent />
     </div>
-  )
+  );
 }
-
-export default maps
+export default Maps;

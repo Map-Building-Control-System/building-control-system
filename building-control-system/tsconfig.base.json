@@ -15,6 +15,14 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@building-control-system/Map": ["libs/Map/src/index.ts"],
+      "@building-control-system/Map/server": ["libs/Map/src/server.ts"],
+      "@building-control-system/MapComponent": [
+        "libs/MapComponent/src/index.ts"
+      ],
+      "@building-control-system/MapComponent/server": [
+        "libs/MapComponent/src/server.ts"
+      ],
       "@building-control-system/auth": ["libs/auth/src/index.ts"],
       "@building-control-system/auth/server": ["libs/auth/src/server.ts"],
       "@building-control-system/buttoncomponent": [
@@ -23,6 +31,8 @@
       "@building-control-system/buttoncomponent/server": [
         "libs/buttoncomponent/src/server.ts"
       ],
+      "@building-control-system/map": ["libs/map/src/index.ts"],
+      "@building-control-system/map/server": ["libs/map/src/server.ts"],
       "@building-control-system/testcomponent": [
         "libs/auth/testcomponent/src/index.ts"
       ],

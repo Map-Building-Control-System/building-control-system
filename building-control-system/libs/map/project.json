@@ -1,9 +1,9 @@
 {
-  "name": "auth",
+  "name": "map",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/auth/src",
+  "sourceRoot": "libs/map/src",
   "projectType": "library",
   "tags": [],
-  "// targets": "to see all targets run: nx show project auth --web",
+  "// targets": "to see all targets run: nx show project map --web",
   "targets": {}
 }
