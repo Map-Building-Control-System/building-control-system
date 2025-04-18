@@ -8,13 +8,13 @@ import { Point, LineString, Polygon } from 'ol/geom';
 import Feature from 'ol/Feature';
 import { Style, Stroke, Fill, Text, Circle } from 'ol/style';
 import { Select, Draw, Snap, Modify } from 'ol/interaction';
-import { click } from 'ol/events/condition';
-import { Modal, Button, ButtonGroup, Form, Tabs, Tab, Alert, Spinner, Card, Row, Col, Image } from 'react-bootstrap';
+import { click, pointerMove } from 'ol/events/condition';
+import { Modal, Button, ButtonGroup, Form, Tabs, Tab, Alert, Spinner, Card, Row, Col, Image, Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { processDxfFile } from './dxfProcessor';
 import ElementDetailModal from './ElementDetailModal';
-import ElementPropertiesPanel from './ElementPropertiesPanel';
 import { Building, BuildingElement, BuildingElementType, FloorPlan, FloorPlanModalProps } from '../utils/types';
+import test from './images/product.png';
 
 const elementTypes = {
   'outer-wall': { name: 'Dış Duvar', color: '#333', thickness: 5, image: '/images/wall.png' },
@@ -24,7 +24,15 @@ const elementTypes = {
   'room': { name: 'Oda', color: 'rgba(200, 200, 200, 0.2)', image: '/images/room.png' },
   'furniture': { name: 'Mobilya', color: 'rgba(139, 69, 19, 0.3)', image: '/images/furniture.png' },
   'raf': { name: 'RAF', color: 'rgba(70, 130, 180, 0.3)', image: '/images/shelf.png' },
-  'product': { name: 'Ürün', color: '#FF6347', image: '/images/product.png' }
+  'product': { name: 'Ürün', color: '#FF6347', image: test }
+};
+
+// Raf özellikleri için tipler
+const shelfTypes = {
+  'standard': { name: 'Standart Raf', capacity: 10 },
+  'heavy-duty': { name: 'Ağır Hizmet Rafı', capacity: 20 },
+  'corner': { name: 'Köşe Rafı', capacity: 5 },
+  'pallet': { name: 'Palet Rafı', capacity: 15 }
 };
 
 const FloorPlanModal: React.FC<FloorPlanModalProps> = ({ building, onClose, onSave }) => {
@@ -42,6 +50,7 @@ const FloorPlanModal: React.FC<FloorPlanModalProps> = ({ building, onClose, onSa
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [detailElement, setDetailElement] = useState<BuildingElement | null>(null);
   const [elementInfo, setElementInfo] = useState<any>(null);
+  const selectRef = useRef<Select | null>(null);
 
   const createFeatureFromElement = (element: BuildingElement): Feature | null => {
     if (!element.coordinates?.length) return null;
@@ -64,6 +73,20 @@ const FloorPlanModal: React.FC<FloorPlanModalProps> = ({ building, onClose, onSa
       fill: new Fill({ color: element.type === 'room' ? 'rgba(200,200,200,0.2)' : 'transparent' }),
       text: new Text({ text: element.name || '', font: '12px Arial', fill: new Fill({ color: '#000' }) })
     };
+    
+    // Raf özel stil
+    if (element.type === 'raf') {
+      return new Style({
+        stroke: new Stroke({ color: element.color || '#4682B4', width: 2, lineDash: [5, 5] }),
+        fill: new Fill({ color: 'rgba(70, 130, 180, 0.3)' }),
+        text: new Text({ 
+          text: `${element.name || 'Raf'}\nKapasite: ${element.properties?.capacity || 0}`, 
+          font: 'bold 10px Arial', 
+          fill: new Fill({ color: '#000' }),
+          stroke: new Stroke({ color: '#FFF', width: 3 })
+        })
+      });
+    }
 
     return element.type === 'product' ?
       new Style({
@@ -74,7 +97,7 @@ const FloorPlanModal: React.FC<FloorPlanModalProps> = ({ building, onClose, onSa
   };
 
   const calculateElementSize = (element: BuildingElement): string => {
-    if (!element.coordinates || element.coordinates.length < 2) return '0 m²';
+    if (!element.coordinates || element.coordinates.length < 1) return '0 m²';
     
     if (element.type === 'product') return 'Nokta eleman';
     
@@ -104,6 +127,7 @@ const FloorPlanModal: React.FC<FloorPlanModalProps> = ({ building, onClose, onSa
     setIsSaving(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
     onSave(buildingState);
+    console.log(buildingState);
     setIsSaving(false);
   };
 
@@ -141,6 +165,12 @@ const FloorPlanModal: React.FC<FloorPlanModalProps> = ({ building, onClose, onSa
   const updateBuildingElement = (updates: Partial<BuildingElement>) => {
     if (!selectedElement) return;
     
+    // Point elemanların türünü değiştirmeyi engelle
+    if (selectedElement.type === 'product' && updates.type && updates.type !== 'product') {
+      alert('Ürün elemanlarının türü değiştirilemez!');
+      return;
+    }
+    
     setBuildingState(prev => {
       const updatedFloors = [...prev.floors];
       const updatedElements = [...updatedFloors[currentFloor].elements];
@@ -163,7 +193,8 @@ const FloorPlanModal: React.FC<FloorPlanModalProps> = ({ building, onClose, onSa
       setElementInfo({
         ...elementInfo,
         name: updates.name || elementInfo.name,
-        type: updates.type ? elementTypes[updates.type].name : elementInfo.type
+        type: updates.type ? elementTypes[updates.type].name : elementInfo.type,
+        ...(updates.properties?.capacity && { capacity: updates.properties.capacity })
       });
     }
   };
@@ -190,66 +221,120 @@ const FloorPlanModal: React.FC<FloorPlanModalProps> = ({ building, onClose, onSa
       size: calculateElementSize(element),
       image: elementTypes[element.type].image,
       color: element.color,
-      thickness: element.thickness
+      thickness: element.thickness,
+      capacity: element.properties?.capacity,
+      shelfType: element.properties?.shelfType
     });
+    
+    setDetailElement(element);
+    setShowDetailModal(true);
   };
 
+  // Raf özelliklerini güncelle
+  const updateShelfProperties = (shelfType: string) => {
+    if (!selectedElement || selectedElement.type !== 'raf') return;
+    
+    const properties = {
+      ...selectedElement.properties,
+      shelfType,
+      capacity: shelfTypes[shelfType].capacity
+    };
+    
+    updateBuildingElement({ properties });
+  };
+
+  // OpenLayers haritasını ve select etkileşimini oluştur
   useEffect(() => {
     if (!floorPlanRef.current) return;
   
     const floor = buildingState.floors[currentFloor];
     const source = new VectorSource();
     
+    source.clear();
+    
     floor.elements.forEach(element => {
       const feature = createFeatureFromElement(element);
       if (feature) source.addFeature(feature);
     });
   
-    const map = new Map({
-      target: floorPlanRef.current,
-      layers: [new VectorLayer({ source })],
-      view: new View({ center: [0, 0], zoom: 25, maxZoom: 50, minZoom: 1 })
-    });
-  
-    if (source.getFeatures().length > 0) {
-      map.getView().fit(source.getExtent(), { padding: [50, 50, 50, 50], maxZoom: 25, duration: 0 });
+    if (!floorMap) {
+      const newMap = new Map({
+        target: floorPlanRef.current,
+        layers: [new VectorLayer({ source })],
+        view: new View({ center: [0, 0], zoom: 25, maxZoom: 50, minZoom: 1 })
+      });
+      
+      setFloorMap(newMap);
+    } else {
+      const vectorLayer = floorMap.getLayers().getArray()
+        .find(layer => layer instanceof VectorLayer) as VectorLayer<VectorSource>;
+      if (vectorLayer) {
+        vectorLayer.setSource(source);
+      }
     }
   
-    const select = new Select({ 
-      condition: click, 
-      layers: [new VectorLayer({ source })],
-      style: (feature) => {
-        const element = feature.get('element') as BuildingElement;
-        const style = getElementStyle(element);
-        
-        if (editMode) {
-          const selectedStyle = new Style({
-            stroke: new Stroke({ color: '#FF0000', width: (element.thickness || 3) + 2 }),
-            fill: new Fill({ color: 'rgba(255, 0, 0, 0.1)' })
-          });
+    if (source.getFeatures().length > 0 && floorMap) {
+      floorMap.getView().fit(source.getExtent(), { padding: [50, 50, 50, 50], maxZoom: 25, duration: 0 });
+    }
+  
+    if (selectRef.current && floorMap) {
+      floorMap.removeInteraction(selectRef.current);
+    }
+  
+    if (floorMap) {
+      const select = new Select({ 
+        condition: click,
+        style: (feature) => {
+          const element = feature.get('element') as BuildingElement;
+          const style = getElementStyle(element);
           
-          if (style.getText()) selectedStyle.setText(style.getText());
-          return [style, selectedStyle];
+          if (editMode) {
+            const selectedStyle = new Style({
+              stroke: new Stroke({ color: '#FF0000', width: (element.thickness || 3) + 2 }),
+              fill: new Fill({ color: 'rgba(255, 0, 0, 0.1)' })
+            });
+            
+            if (style.getText()) selectedStyle.setText(style.getText());
+            return [style, selectedStyle];
+          }
+          return style;
         }
-        return style;
-      }
-    });
-
-    select.on('select', (e) => {
-      const selected = e.selected[0]?.get('element') || null;
-      setSelectedElement(selected);
+      });
       
-      if (selected) {
-        handleElementClick(selected);
-        setDetailElement(selected);
-        setShowDetailModal(true);
-      }
-    });
+      select.on('select', (e) => {
+        if (e.selected.length > 0) {
+          const selected = e.selected[0].get('element') as BuildingElement;
+          if (selected) {
+            handleElementClick(selected);
+          }
+        }
+      });
+      
+      floorMap.addInteraction(select);
+      selectRef.current = select;
+    }
     
-    map.addInteraction(select);
+    return () => {
+      if (floorMap && selectRef.current) {
+        floorMap.removeInteraction(selectRef.current);
+      }
+    };
+  }, [buildingState, currentFloor, floorMap]);
 
+  // Düzenleme modunu etkinleştir/devre dışı bırak
+  useEffect(() => {
+    if (!floorMap) return;
+    
     let modify: Modify | null = null;
+    
     if (editMode) {
+      const vectorLayer = floorMap.getLayers().getArray()
+        .find(layer => layer instanceof VectorLayer) as VectorLayer<VectorSource>;
+      
+      if (!vectorLayer) return;
+      
+      const source = vectorLayer.getSource();
+      
       modify = new Modify({
         source: source,
         style: new Style({
@@ -258,6 +343,7 @@ const FloorPlanModal: React.FC<FloorPlanModalProps> = ({ building, onClose, onSa
       });
 
       modify.on('modifyend', (e) => {
+        const floor = buildingState.floors[currentFloor];
         const updatedElements = [...floor.elements];
         
         e.features.getArray().forEach(feature => {
@@ -283,18 +369,15 @@ const FloorPlanModal: React.FC<FloorPlanModalProps> = ({ building, onClose, onSa
         }));
       });
       
-      map.addInteraction(modify);
+      floorMap.addInteraction(modify);
     }
 
-    setFloorMap(map);
-
     return () => {
-      if (modify) map.removeInteraction(modify);
-      map.removeInteraction(select);
-      map.setTarget(undefined);
+      if (modify) floorMap.removeInteraction(modify);
     };
-  }, [buildingState, currentFloor, editMode]);
+  }, [editMode, floorMap, currentFloor]);
 
+  // Çizim modunu etkinleştir
   useEffect(() => {
     if (!floorMap || !drawingMode) return;
   
@@ -322,11 +405,13 @@ const FloorPlanModal: React.FC<FloorPlanModalProps> = ({ building, onClose, onSa
   
     draw.on('drawend', (e) => {
       const geometry = e.feature.getGeometry();
+      if (!geometry) return;
+      
       const coordinates = geometry instanceof Polygon ? geometry.getCoordinates()[0] :
         geometry instanceof LineString ? geometry.getCoordinates() :
         geometry instanceof Point ? [geometry.getCoordinates()] : [];
   
-      const newElement = {
+      const newElement: BuildingElement = {
         type: drawingMode,
         coordinates,
         name: elementName || `${elementTypes[drawingMode].name} ${buildingState.floors[currentFloor].elements.length + 1}`,
@@ -334,7 +419,16 @@ const FloorPlanModal: React.FC<FloorPlanModalProps> = ({ building, onClose, onSa
         thickness: elementTypes[drawingMode].thickness,
         properties: {}
       };
-  
+      
+      // Raf için varsayılan özellikler
+      if (drawingMode === 'raf') {
+        newElement.properties = {
+          shelfType: 'standard',
+          capacity: 10,
+          sections: 1
+        };
+      }
+
       setBuildingState(prev => ({
         ...prev,
         floors: prev.floors.map((floor, idx) => 
@@ -440,6 +534,7 @@ const FloorPlanModal: React.FC<FloorPlanModalProps> = ({ building, onClose, onSa
                 <div><strong>Ad:</strong> {elementInfo.name}</div>
                 <div><strong>Tür:</strong> {elementInfo.type}</div>
                 <div><strong>Boyut:</strong> {elementInfo.size}</div>
+                {elementInfo.capacity && <div><strong>Kapasite:</strong> {elementInfo.capacity} ürün</div>}
               </Col>
             </Row>
             <div className="d-flex gap-1">
@@ -454,6 +549,42 @@ const FloorPlanModal: React.FC<FloorPlanModalProps> = ({ building, onClose, onSa
             {elementInfo.thickness && (
               <div><small>Kalınlık: {elementInfo.thickness}px</small></div>
             )}
+            
+            {/* Raf özel bilgiler */}
+            {selectedElement?.type === 'raf' && (
+              <div className="mt-2">
+                <Dropdown onSelect={(e) => updateShelfProperties(e as string)}>
+                  <Dropdown.Toggle variant="outline-secondary" size="sm" className="w-100">
+                    {selectedElement.properties?.shelfType ? 
+                      shelfTypes[selectedElement.properties.shelfType].name : 'Raf Türü Seçin'}
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    {Object.keys(shelfTypes).map(type => (
+                      <Dropdown.Item key={type} eventKey={type} active={selectedElement.properties?.shelfType === type}>
+                        {shelfTypes[type].name} (Kapasite: {shelfTypes[type].capacity})
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
+            )}
+            
+            <div className="d-flex gap-1 mt-2">
+              <Button 
+                variant="outline-primary" 
+                size="sm" 
+                onClick={() => setShowDetailModal(true)}
+              >
+                Detayları Düzenle
+              </Button>
+              <Button 
+                variant="outline-danger" 
+                size="sm" 
+                onClick={() => setShowDeleteConfirm(true)}
+              >
+                Sil
+              </Button>
+            </div>
           </div>
         ) : (
           <Alert variant="info" className="mb-0 small">
@@ -469,7 +600,7 @@ const FloorPlanModal: React.FC<FloorPlanModalProps> = ({ building, onClose, onSa
       <Modal show={true} onHide={onClose} size="xl" centered className="floor-plan-modal">
         <Modal.Header closeButton className="bg-dark text-white">
           <Modal.Title>
-            {buildingState.name} - {buildingState.floors[currentFloor].level}
+            {buildingState.name} - {buildingState.floors[currentFloor]?.level || 'Kat'}
           </Modal.Title>
         </Modal.Header>
         
@@ -494,15 +625,6 @@ const FloorPlanModal: React.FC<FloorPlanModalProps> = ({ building, onClose, onSa
             </div>
             
             <div className="border-start" style={{ width: '350px', minWidth: '350px' }}>
-              <ElementPropertiesPanel
-                selectedElement={selectedElement}
-                elementTypes={elementTypes}
-                onUpdateElement={updateBuildingElement}
-                onDeleteElement={() => setShowDeleteConfirm(true)}
-                currentFloor={currentFloor}
-                buildingState={buildingState}
-                onUpdateFloorProperty={updateFloorProperty}
-              />
               <ElementInfoCard />
             </div>
           </div>
@@ -548,6 +670,7 @@ const FloorPlanModal: React.FC<FloorPlanModalProps> = ({ building, onClose, onSa
         element={detailElement}
         elementTypes={elementTypes}
         onSave={handleDetailSave}
+        disableTypeChange={detailElement?.type === 'product'}
       />
       
       <Modal show={showDeleteConfirm} onHide={() => setShowDeleteConfirm(false)} centered>

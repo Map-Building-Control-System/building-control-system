@@ -32,7 +32,21 @@
         "libs/buttoncomponent/src/server.ts"
       ],
       "@building-control-system/map": ["libs/map/src/index.ts"],
+      "@building-control-system/map-openlayers": [
+        "libs/map/map-openlayers/src/index.ts"
+      ],
+      "@building-control-system/map-openlayers/server": [
+        "libs/map/map-openlayers/src/server.ts"
+      ],
       "@building-control-system/map/server": ["libs/map/src/server.ts"],
+      "@building-control-system/openlayers-map": [
+        "libs/map/openlayers-map/src/index.ts"
+      ],
+      "@building-control-system/openlayers-map/server": [
+        "libs/map/openlayers-map/src/server.ts"
+      ],
+      "@building-control-system/oplmap": ["libs/oplmap/src/index.ts"],
+      "@building-control-system/oplmap/server": ["libs/oplmap/src/server.ts"],
       "@building-control-system/testcomponent": [
         "libs/auth/testcomponent/src/index.ts"
       ],

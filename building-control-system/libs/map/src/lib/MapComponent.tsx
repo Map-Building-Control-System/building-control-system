@@ -52,7 +52,14 @@ const generateSampleWarehouses = (): Building[] => [
             type: 'raf',
             name: 'Standart Raf',
             coordinates: [[4, 1], [8, 1], [8, 5], [4, 5]],
-            properties: { capacity: '1000 ürün', type: 'A tipi' }
+            properties: { 
+              capacity: 1000, 
+              type: 'A tipi',
+              products: [
+                { id: 1, name: 'Ürün A', code: 'PRD-001', quantity: 50, color: '#FF5733' },
+                { id: 2, name: 'Ürün B', code: 'PRD-002', quantity: 30, color: '#33FF57' }
+              ]
+            }
           }
         ]
       }

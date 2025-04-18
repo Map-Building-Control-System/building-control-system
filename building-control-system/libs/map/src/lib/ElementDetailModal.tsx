@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, InputGroup } from 'react-bootstrap';
 import { BuildingElement } from '../utils/types';
 
 interface ElementType {
   name: string;
   color: string;
   thickness?: number;
+  image?: string;
 }
 
 interface ElementDetailModalProps {
@@ -24,87 +25,157 @@ const ElementDetailModal: React.FC<ElementDetailModalProps> = ({
   onSave 
 }) => {
   const [localElement, setLocalElement] = useState<BuildingElement | null>(null);
+  const [errors, setErrors] = useState<{name?: string}>({});
 
+  // Eleman değiştiğinde local state'i güncelle
   useEffect(() => {
-    if (element) {
-      setLocalElement({...element});
-    }
+    setLocalElement(element ? {...element} : null);
+    setErrors({});
   }, [element]);
 
+  // Alan değişikliklerini işle
   const handleChange = (field: keyof BuildingElement, value: any) => {
     if (localElement) {
       setLocalElement({
         ...localElement,
         [field]: value
       });
+
+      // Validasyon
+      if (field === 'name') {
+        setErrors({
+          ...errors,
+          name: value.trim() ? undefined : 'Bu alan zorunludur'
+        });
+      }
     }
+  };
+
+  // Kaydet butonu için validasyon
+  const validateAndSave = () => {
+    if (!localElement) return;
+
+    if (!localElement.name?.trim()) {
+      setErrors({name: 'Bu alan zorunludur'});
+      return;
+    }
+
+    onSave(localElement);
+    onHide();
   };
 
   if (!localElement) return null;
 
+  const currentType = elementTypes[localElement.type] || {};
+  const defaultColor = currentType.color || '#000000';
+
   return (
-    <Modal show={show} onHide={onHide} size="lg" centered style={{ zIndex: 1060 }}>
-      <Modal.Header closeButton>
-        <Modal.Title>Element Detayı - {localElement.name || 'İsimsiz'}</Modal.Title>
+    <Modal show={show} onHide={onHide} size="lg" centered backdrop="static">
+      <Modal.Header closeButton className="bg-light">
+        <Modal.Title>
+          <i className="fas fa-edit me-2"></i>
+          {currentType.name} Düzenleme - {localElement.name || 'İsimsiz Eleman'}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Form.Group className="mb-3">
-            <Form.Label>Ad</Form.Label>
-            <Form.Control 
-              type="text" 
-              value={localElement.name || ''}
-              onChange={(e) => handleChange('name', e.target.value)}
-            />
-          </Form.Group>
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>Eleman Adı</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={localElement.name || ''}
+                  onChange={(e) => handleChange('name', e.target.value)}
+                  isInvalid={!!errors.name}
+                  placeholder="Eleman adı giriniz"
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.name}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+            
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>Eleman Türü</Form.Label>
+                <Form.Select
+                  value={localElement.type}
+                  onChange={(e) => {
+                    const newType = e.target.value;
+                    handleChange('type', newType);
+                    handleChange('color', elementTypes[newType]?.color || defaultColor);
+                    if (elementTypes[newType]?.thickness !== undefined) {
+                      handleChange('thickness', elementTypes[newType]?.thickness);
+                    }
+                  }}
+                >
+                  {Object.entries(elementTypes).map(([key, type]) => (
+                    <option key={key} value={key}>{type.name}</option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+          </Row>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Tür</Form.Label>
-            <Form.Control
-              as="select"
-              value={localElement.type}
-              onChange={(e) => {
-                const newType = e.target.value;
-                handleChange('type', newType);
-                handleChange('color', elementTypes[newType]?.color || '#000000');
-                if (elementTypes[newType]?.thickness !== undefined) {
-                  handleChange('thickness', elementTypes[newType]?.thickness);
-                }
-              }}
-            >
-              {Object.entries(elementTypes).map(([key, type]) => (
-                <option key={key} value={key}>{type.name}</option>
-              ))}
-            </Form.Control>
-          </Form.Group>
+          <Row className="mb-3">
+            {localElement.thickness !== undefined && (
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Kalınlık (px)</Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      type="number"
+                      value={localElement.thickness}
+                      onChange={(e) => handleChange('thickness', parseInt(e.target.value) || 1)}
+                      min="1"
+                      max="20"
+                    />
+                    <InputGroup.Text>px</InputGroup.Text>
+                  </InputGroup>
+                </Form.Group>
+              </Col>
+            )}
+            
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>Renk Seçimi</Form.Label>
+                <div className="d-flex align-items-center">
+                  <Form.Control
+                    type="color"
+                    className="form-control-color"
+                    value={localElement.color || defaultColor}
+                    onChange={(e) => handleChange('color', e.target.value)}
+                    title="Renk seçin"
+                  />
+                  <span className="ms-2">{localElement.color || defaultColor}</span>
+                </div>
+              </Form.Group>
+            </Col>
+          </Row>
 
-          {localElement.thickness !== undefined && (
-            <Form.Group className="mb-3">
-              <Form.Label>Kalınlık</Form.Label>
-              <Form.Control
-                type="number"
-                value={localElement.thickness}
-                onChange={(e) => handleChange('thickness', parseInt(e.target.value) || 0)}
-                min="1"
-                max="10"
+          {currentType.image && (
+            <div className="text-center mt-3">
+              <img 
+                src={currentType.image} 
+                alt={currentType.name} 
+                style={{ maxWidth: '100px', opacity: 0.7 }}
+                className="img-thumbnail"
               />
-            </Form.Group>
+            </div>
           )}
-
-          <Form.Group className="mb-3">
-            <Form.Label>Renk</Form.Label>
-            <Form.Control
-              type="color"
-              value={localElement.color || elementTypes[localElement.type]?.color || '#000000'}
-              onChange={(e) => handleChange('color', e.target.value)}
-            />
-          </Form.Group>
         </Form>
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>Kapat</Button>
-        <Button variant="primary" onClick={() => localElement && onSave(localElement)}>
-          Kaydet
+      <Modal.Footer className="bg-light">
+        <Button variant="secondary" onClick={onHide}>
+          <i className="fas fa-times me-2"></i>Vazgeç
+        </Button>
+        <Button 
+          variant="primary" 
+          onClick={validateAndSave}
+          disabled={!!errors.name}
+        >
+          <i className="fas fa-save me-2"></i>Kaydet
         </Button>
       </Modal.Footer>
     </Modal>
