@@ -1,4 +1,3 @@
-// MapComponent.tsx
 import { Map, View } from "ol";
 import TileLayer from "ol/layer/Tile";
 import { OSM } from "ol/source";
@@ -9,6 +8,8 @@ import { Style, Stroke, Fill, Circle as CircleStyle } from "ol/style";
 import 'ol/ol.css';
 import MapTools from "./MapTools";
 import { useAppDispatch, useAppSelector } from "@building-control-system/global-state";
+import WKT from 'ol/format/WKT';
+import Feature from 'ol/Feature';
 
 interface MapComponentProps {
   center?: number[];
@@ -31,8 +32,7 @@ const MapComponent = ({
   const mapInstance = useRef<Map | null>(null);
   const vectorSourceRef = useRef<VectorSource>(new VectorSource());
   const [mapReady, setMapReady] = useState(false);
-
-  const drawnFeatures = useAppSelector((state) => state.map.features); // global state'deki çizimler
+  const features = useAppSelector((state) => state.map?.features || []);
 
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
@@ -76,13 +76,24 @@ const MapComponent = ({
   }, []);
 
   useEffect(() => {
+    if (!mapReady) return;
     vectorSourceRef.current.clear();
-    if (Array.isArray(drawnFeatures)) {
-      drawnFeatures.forEach((feature) => {
+    const wktFormat = new WKT();
+    features.forEach((featureData) => {
+      try {
+        const feature = wktFormat.readFeature(featureData.wkt);      
+        feature.setProperties({
+          name: featureData.name,
+          description: featureData.description,
+          type: featureData.type
+        });
+
         vectorSourceRef.current.addFeature(feature);
-      });
-    }
-  }, [drawnFeatures]);
+      } catch (error) {
+        console.error('Error adding feature:', error);
+      }
+    });
+  }, [features, mapReady]);
 
   return (
     <div className={`position-relative ${className}`} style={style}>

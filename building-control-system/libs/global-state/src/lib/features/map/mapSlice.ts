@@ -1,29 +1,32 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface DrawingType {
-  type: string; // "Point", "LineString", "Polygon", "Circle"
+interface FeatureData {
+  name: string;
+  description: string;
+  type: string;
+  wkt: string;
 }
 
 interface MapState {
-  drawingTypes: DrawingType[]; // Sadece tipleri tutuyoruz
+  features: FeatureData[];
 }
 
 const initialState: MapState = {
-  drawingTypes: [],
+  features: [],
 };
 
 export const mapSlice = createSlice({
   name: 'map',
   initialState,
   reducers: {
-    addFeature: (state, action: PayloadAction<DrawingType>) => {
-      state.drawingTypes.push(action.payload);
+    addFeature: (state, action: PayloadAction<FeatureData>) => {
+      state.features.push(action.payload);
     },
     removeLastFeature: (state) => {
-      state.drawingTypes.pop();
+      state.features.pop();
     },
     clearFeatures: (state) => {
-      state.drawingTypes = [];
+      state.features = [];
     }
   },
 });
