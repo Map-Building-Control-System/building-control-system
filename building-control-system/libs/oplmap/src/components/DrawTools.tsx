@@ -4,15 +4,20 @@ import VectorSource from "ol/source/Vector";
 import { Style, Stroke, Fill, Circle as CircleStyle } from "ol/style";
 import { Map } from "ol";
 import { Card, Button, ButtonGroup } from 'react-bootstrap';
+// import { useAppDispatch, useAppSelector } from '@building-control-system/global-state';
+import { addFeature, useAppDispatch } from '@building-control-system/global-state';
 
 interface CollapsibleDrawToolsProps {
   map: Map;
 }
 
 const CollapsibleDrawTools = ({ map }: CollapsibleDrawToolsProps) => {
+
+ const dispatch = useAppDispatch();
+ 
+
   const [drawType, setDrawType] = useState<'Point' | 'LineString' | 'Polygon' | 'Circle'>('Point');
   const [isDrawingActive, setIsDrawingActive] = useState(false);
-  
   const vectorSourceRef = useRef<VectorSource | null>(null);
   const drawInteractionRef = useRef<Draw | null>(null);
   const snapInteractionRef = useRef<Snap | null>(null);
@@ -68,11 +73,20 @@ const CollapsibleDrawTools = ({ map }: CollapsibleDrawToolsProps) => {
           }),
         }),
       });
-
+      ;
       draw.on('drawend', (e) => {
         e.feature.setStyle(undefined);
+        const geometry = e.feature.getGeometry();
+        
+        if (geometry) {
+          // Sadece geometri tipini dispatch ediyoruz
+          dispatch(addFeature({
+            type: geometry.getType() // "Point", "LineString", "Polygon" veya "Circle"
+          }));
+          
+          console.log("Çizim tipi:", geometry.getType());
+        }
       });
-
       map.addInteraction(draw);
       drawInteractionRef.current = draw;
 

@@ -8,30 +8,20 @@ import { containsExtent } from "ol/extent";
 import Geometry from "ol/geom/Geometry";
 import { Style, Stroke, Fill } from "ol/style";
 import { Button, Badge, Card } from 'react-bootstrap';
-import VectorLayer from "ol/layer/Vector";
 
 interface CollapsiblePolygonAnalyzerProps {
   map: Map;
+  vectorSource: VectorSource | null;
 }
 
-const CollapsiblePolygonAnalyzer = ({ map }: CollapsiblePolygonAnalyzerProps) => {
+const CollapsiblePolygonAnalyzer = ({ map, vectorSource }: CollapsiblePolygonAnalyzerProps) => {
   const [selectedPolygon, setSelectedPolygon] = useState<Feature<Polygon> | null>(null);
   const [featuresInsidePolygon, setFeaturesInsidePolygon] = useState<Feature<Geometry>[]>([]);
   const [isDrawing, setIsDrawing] = useState(false);
-  const vectorSourceRef = useRef<VectorSource | null>(null);
   const drawInteractionRef = useRef<Draw | null>(null);
 
+  // Cleanup when component unmounts
   useEffect(() => {
-    map.getLayers().forEach(layer => {
-        if (layer instanceof VectorLayer && layer.get('name') === 'draw-layer') {
-            vectorSourceRef.current = layer.getSource();
-          }
-        });
-
-    if (!vectorSourceRef.current) {
-      console.error('Vektör kaynağı bulunamadı!');
-    }
-
     return () => {
       if (drawInteractionRef.current) {
         map.removeInteraction(drawInteractionRef.current);
@@ -40,12 +30,13 @@ const CollapsiblePolygonAnalyzer = ({ map }: CollapsiblePolygonAnalyzerProps) =>
   }, [map]);
 
   const findFeaturesInsidePolygon = (polygonFeature: Feature<Polygon>) => {
-    if (!vectorSourceRef.current) return;
+    if (!vectorSource) return;
 
-    const polygon = polygonFeature.getGeometry() as Polygon;
+    const polygon = polygonFeature.getGeometry();
+    if (!polygon) return;
+
     const polygonExtent = polygon.getExtent();
-    
-    const features = vectorSourceRef.current.getFeatures();
+    const features = vectorSource.getFeatures();
     const insideFeatures: Feature<Geometry>[] = [];
     
     features.forEach(feature => {
@@ -64,6 +55,8 @@ const CollapsiblePolygonAnalyzer = ({ map }: CollapsiblePolygonAnalyzerProps) =>
   };
 
   const selectPolygon = () => {
+    if (!vectorSource) return;
+    
     if (drawInteractionRef.current) {
       map.removeInteraction(drawInteractionRef.current);
     }
@@ -71,7 +64,7 @@ const CollapsiblePolygonAnalyzer = ({ map }: CollapsiblePolygonAnalyzerProps) =>
     setIsDrawing(true);
     
     const draw = new Draw({
-      source: vectorSourceRef.current || undefined,
+      source: vectorSource,
       type: 'Polygon',
       style: new Style({
         stroke: new Stroke({ color: 'rgba(255, 0, 0, 0.8)', width: 3 }),
@@ -100,18 +93,20 @@ const CollapsiblePolygonAnalyzer = ({ map }: CollapsiblePolygonAnalyzerProps) =>
 
   const zoomToSelected = () => {
     if (selectedPolygon) {
-      const polygon = selectedPolygon.getGeometry() as Polygon;
-      const extent = polygon.getExtent();
-      map.getView().fit(extent, {
-        padding: [50, 50, 50, 50],
-        duration: 500
-      });
+      const polygon = selectedPolygon.getGeometry();
+      if (polygon) {
+        const extent = polygon.getExtent();
+        map.getView().fit(extent, {
+          padding: [50, 50, 50, 50],
+          duration: 500
+        });
+      }
     }
   };
 
   const clearSelection = () => {
-    if (selectedPolygon && vectorSourceRef.current) {
-      vectorSourceRef.current.removeFeature(selectedPolygon);
+    if (selectedPolygon && vectorSource) {
+      vectorSource.removeFeature(selectedPolygon);
     }
     setSelectedPolygon(null);
     setFeaturesInsidePolygon([]);

@@ -31,6 +31,12 @@
       "@building-control-system/buttoncomponent/server": [
         "libs/buttoncomponent/src/server.ts"
       ],
+      "@building-control-system/global-state": [
+        "libs/global-state/src/index.ts"
+      ],
+      "@building-control-system/global-state/server": [
+        "libs/global-state/src/server.ts"
+      ],
       "@building-control-system/map": ["libs/map/src/index.ts"],
       "@building-control-system/map-openlayers": [
         "libs/map/map-openlayers/src/index.ts"
@@ -47,6 +53,12 @@
       ],
       "@building-control-system/oplmap": ["libs/oplmap/src/index.ts"],
       "@building-control-system/oplmap/server": ["libs/oplmap/src/server.ts"],
+      "@building-control-system/state-managment": [
+        "libs/state-managment/src/index.ts"
+      ],
+      "@building-control-system/state-managment/server": [
+        "libs/state-managment/src/server.ts"
+      ],
       "@building-control-system/testcomponent": [
         "libs/auth/testcomponent/src/index.ts"
       ],
