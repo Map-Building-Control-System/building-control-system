@@ -12,23 +12,8 @@
 
 .content {
   flex: 1;
-  transition: margin-right 0.3s ease;
   background-color: var(--bg-main);
   min-height: calc(100vh - var(--navbar-height));
   padding: 20px;
-  margin-right: 0;
-  
-  &.expanded {
-    margin-right: 0; 
-  }
-}
-
-@media (min-width: 768px) {
-  .content {
-    margin-right: var(--sidebar-width); 
-    
-    &.expanded {
-      margin-right: var(--sidebar-collapsed-width); 
-    }
-  }
+  transition: none; 
 }

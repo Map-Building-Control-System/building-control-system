@@ -1,8 +1,8 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { Container, Row, Col, Card, ListGroup } from 'react-bootstrap';
+import { Container, Row, Col, Card, ListGroup, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'bootstrap-icons/font/bootstrap-icons.css'; // İkonların doğru yüklenmesini sağlar
 import { useAppSelector } from '@building-control-system/global-state';
 
 const MapComponent = dynamic(
@@ -11,19 +11,23 @@ const MapComponent = dynamic(
 );
 
 const About = () => {
-  // Global state'ten çizim tiplerini al
   const drawingTypes = useAppSelector((state) => state.map.drawingTypes);
   
-  // Çizim sayılarını hesapla
   const typeCounts = drawingTypes.reduce((acc, { type }) => {
     acc[type] = (acc[type] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
 
+  // Modal açılma durumu
+  const [showModal, setShowModal] = React.useState(false);
+
+  const handleCloseModal = () => setShowModal(false);
+  const handleShowModal = () => setShowModal(true);
+
   return (
     <Container fluid className="p-0">
       <Row className="m-0">
-        <Col xs={12} md={4} className="p-2">
+        <Col xs={12} md={3} className="p-2">
           <Card className="h-100">
             <Card.Header>Çizim İstatistikleri</Card.Header>
             <Card.Body>
@@ -42,8 +46,8 @@ const About = () => {
           </Card>
         </Col>
         
-        <Col xs={12} md={8} className="p-0">
-          <div className="position-relative" style={{ height: 'calc(100vh - 80px)' }}>
+        <Col xs={12} md={9} className="p-0">
+          <div className="position-relative" style={{ height: 'calc(100vh - 100px)' }}>
             <MapComponent
               center={[34, 39]}
               zoom={6}
@@ -52,18 +56,28 @@ const About = () => {
             />
             
             <button 
-              className="btn btn-sm btn-info position-absolute bottom-0 end-0 m-3"
-              data-bs-toggle="modal" 
-              data-bs-target="#infoModal"
+              className="btn btn-sm btn-info position-absolute bottom-0 start-0 m-3 p-2"
+              onClick={handleShowModal} // Modalı açmak için
+              style={{ fontSize: '10px', borderRadius: '50%' }} // İkonu büyük yap
             >
-              <i className="bi bi-info-circle me-1"></i>
-              Yardım
+              <i className="bi bi-info-circle"></i> 
             </button>
           </div>
         </Col>
       </Row>
 
-      {/* Yardım Modalı (aynı) */}
+      {/* Yardım Modalı */}
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Yardım</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Harita ile ilgili yardım ve yönergeler burada yer alacak.</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <button className="btn btn-secondary" onClick={handleCloseModal}>Kapat</button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

@@ -9,6 +9,7 @@ import { addFeature, useAppDispatch } from '@building-control-system/global-stat
 
 interface CollapsibleDrawToolsProps {
   map: Map;
+  vectorSource: VectorSource | null;
 }
 
 const CollapsibleDrawTools = ({ map }: CollapsibleDrawToolsProps) => {

@@ -16,10 +16,10 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
         <h1 className={styles.logo}>MBC</h1>
       </div>
       
-      <div className={styles.searchContainer}>
+      {/* <div className={styles.searchContainer}>
         <Search size={18} className={styles.searchIcon} />
         <input type="text" placeholder="Ara..." className={styles.searchInput} />
-      </div>
+      </div> */}
       
       <div className={styles.navRight}>
         <button className={styles.iconButton}>
